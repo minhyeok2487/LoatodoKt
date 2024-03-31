@@ -1,6 +1,6 @@
 package Loatodo.entity.member
 
-import Loatodo.controller.auth.dto.SignUpMemberRequestDto
+import Loatodo.controller.dtos.auth.SignUpMemberRequest
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -38,9 +38,9 @@ data class Member(
     val lastModifiedDate: LocalDateTime = LocalDateTime.now()
 
 ) {
-    constructor(signUpMemberRequestDto: SignUpMemberRequestDto) : this(
-        username = signUpMemberRequestDto.username,
-        password = BCryptPasswordEncoder().encode(signUpMemberRequestDto.password),
+    constructor(signUpMemberRequest: SignUpMemberRequest) : this(
+        username = signUpMemberRequest.username,
+        password = BCryptPasswordEncoder().encode(signUpMemberRequest.password),
         apiKey = null,
         authProvider = "none",
         accessKey = null,

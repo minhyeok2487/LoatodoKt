@@ -1,10 +1,11 @@
 package Loatodo.controller.auth
 
-import Loatodo.controller.auth.dto.SignUpMemberRequestDto
+import Loatodo.controller.dtos.auth.SignUpMemberRequest
 import Loatodo.entity.member.Member
 import Loatodo.service.MemberService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,8 +22,8 @@ class AuthController (
 
     @Operation(summary = "1차 회원가입", description = "이메일과 비밀번호 받음")
     @PostMapping("/signup")
-    fun signUpMember(@RequestBody signUpMemberRequestDto: SignUpMemberRequestDto)
+    fun signUpMember(@RequestBody @Valid signUpMemberRequest: SignUpMemberRequest)
     : ResponseEntity<Member> {
-        return ResponseEntity(memberService.signMember(signUpMemberRequestDto), HttpStatus.OK)
+        return ResponseEntity(memberService.signMember(signUpMemberRequest), HttpStatus.OK)
     }
 }
