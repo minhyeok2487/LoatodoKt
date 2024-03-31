@@ -19,11 +19,11 @@ class MemberService (
     }
 
     private fun validateSignUpMemberRequest(signUpMemberRequest: SignUpMemberRequest) {
-        if(memberRepository.existsByUsername(signUpMemberRequest.username)) {
-            throw IllegalArgumentException("이미 가입된 회원입니다. username : ${signUpMemberRequest.username} ")
-        }
         if(signUpMemberRequest.password != signUpMemberRequest.equalPassword) {
             throw IllegalArgumentException("비밀번호가 일치하지 않습니다.")
+        }
+        if(memberRepository.existsByUsername(signUpMemberRequest.username)) {
+            throw IllegalArgumentException("이미 가입된 회원입니다. username : ${signUpMemberRequest.username} ")
         }
         if(!authEmailRepository.findAllByEmail(signUpMemberRequest.username)
             .any { email -> email.number == signUpMemberRequest.number && email.isAuth}) {

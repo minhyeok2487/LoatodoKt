@@ -7,7 +7,9 @@ import Loatodo.entity.authEmail.AuthEmailRepository
 import Loatodo.entity.member.MemberRepository
 import jakarta.mail.MessagingException
 import jakarta.mail.internet.MimeMessage
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.mail.MailException
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,6 +24,7 @@ class EmailService (
     private val memberRepository: MemberRepository
 ) {
     private var number = 0
+    val log = LoggerFactory.getLogger(this.javaClass)!!
 
     @Value("\${spring.mail.username}")
     private val senderEmail: String? = null
@@ -30,8 +33,13 @@ class EmailService (
     fun sendEmail(sendEmailRequest: SendEmailRequest): Boolean {
         validateSignUpMemberRequest(sendEmailRequest)
         val message = createMail(sendEmailRequest.email)
-        javaMailSender.send(message)
+        try {
+            javaMailSender.send(message)
+        } catch (exception : MailException) {
+            log.warn("MailException : ${exception.message}")
+        }
         authEmailRepository.save(AuthEmail(sendEmailRequest.email, number))
+        log.info("인증번호 전송 성공 $number")
         return true
     }
 
@@ -55,7 +63,7 @@ class EmailService (
             ?: throw NotFoundException("인증 이메일을 찾을 수 없습니다.")
 
         val timeElapsedMinutes = Duration.between(authMail.createdDate, LocalDateTime.now()).toMinutes()
-        if (timeElapsedMinutes > 3) throw java.lang.IllegalArgumentException("만료된 인증번호 입니다.")
+        if (timeElapsedMinutes > 3) throw IllegalArgumentException("만료된 인증번호 입니다.")
 
         return authMail
     }

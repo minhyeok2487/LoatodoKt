@@ -16,7 +16,7 @@ import java.lang.IllegalStateException
 
 @Tag(name = "Email API", description = "이메일 인증 API")
 @RestController
-@RequestMapping("/v3/email")
+@RequestMapping("/email")
 class EmailController(
     private val emailService: EmailService
 ) {
