@@ -1,4 +1,4 @@
-package Loatodo.exception
+package Loatodo.utils.exception
 
 data class ExceptionResponse(
     var errorCode: Int,
